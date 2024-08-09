@@ -1,4 +1,5 @@
 const express = require('express');
+const auth = require('../middleware/auth');
 const router = express.Router(); //Application Express
 const booksCtrl = require('../controllers/books'); // Modele de donnée 
 
@@ -21,7 +22,7 @@ router.use((req, res, next) => {
 //     .catch(error => res.status(400).json({ error }));
 // });
 
-router.get("/", booksCtrl.getAllBooks);
+router.get("/", auth, booksCtrl.getAllBooks);
 
 // router.put('/:id', (req, res, next) => {
 //     Books.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
