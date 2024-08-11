@@ -9,12 +9,15 @@ const booksCtrl = require('../controllers/books'); // Modele de donnée
 router.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
-    res.setHeader('Access-Control-Allow-Methods', 'GET , POST, PUT');
+    res.setHeader('Access-Control-Allow-Methods', 'GET , POST, PUT, DELETE');
     next();
     }
 );
 
 router.get("/", booksCtrl.getAllBooks);
 router.post("/", auth, multer, booksCtrl.createBooks);
+router.get("/:id", booksCtrl.getOneBook);
+router.put("/:id", auth, multer, booksCtrl.modifyBooks);
+router.delete("/:id", auth, booksCtrl.deleteBooks);
 
 module.exports = router;
