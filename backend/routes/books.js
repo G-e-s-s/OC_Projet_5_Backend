@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router(); //Application Express
 const auth = require('../middleware/auth');
-const multer = require('../middleware/multer_config');
-
+const sharp = require('../middleware/sharp_config');
+const multer = require('../middleware/multer_config')
 const booksCtrl = require('../controllers/books'); // Modele de donnée 
 
 // Fonctions de l'api (route CRUD)
@@ -15,9 +15,10 @@ router.use((req, res, next) => {
 );
 
 router.get("/", booksCtrl.getAllBooks);
-router.post("/", auth, multer, booksCtrl.createBooks);
+router.post("/", auth, multer, sharp, booksCtrl.createBooks);
 router.get("/:id", booksCtrl.getOneBook);
-router.put("/:id", auth, multer, booksCtrl.modifyBooks);
+router.put("/:id", auth,multer, sharp, booksCtrl.modifyBooks);
 router.delete("/:id", auth, booksCtrl.deleteBooks);
+router.post("/:id/rating", auth, booksCtrl.ratingBooks);
 
 module.exports = router;
