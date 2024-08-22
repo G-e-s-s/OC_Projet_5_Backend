@@ -37,16 +37,22 @@ exports.ratingBooks = (req, res, next) => {
           userId : req.auth.userId,
           grade: req.body.rating
         };
-        books.ratings.push(newElement);
-        Books.updateOne({ _id: req.params.id}, { ...Books, _id: req.params.id, ratings: newTab}) //mise à jour de l'enregistrement
-            .then(() => res.status(200).json({message : 'Livre modifié !'}))
-            .catch(error => res.status(401).json({ error }));
+        const newBook = books;
+        const newTab = books.ratings;
+        newTab.push(newElement);
+        newBook.ratings = newTab;
+        let sum = 0;
+        newTab.forEach((element) => sum += element.grade);
+        newBook.averageRating = sum/newTab.length;
+        Books.updateOne({ _id: req.params.id}, {ratings: newTab, averageRating: newBook.averageRating}) //mise à jour de l'enregistrement
+          .then(() => res.status(200).json(newBook))
+          .catch(error => res.status(401).json({ error }));
       } else {
         res.status(403).json({message : "Not authorized"});
       }
     }
     )
-    .catch(error => res.status(404).json({ error }));
+  .catch(error => res.status(404).json({ error }));
 };
 
 
