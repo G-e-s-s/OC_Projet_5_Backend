@@ -14,6 +14,20 @@ exports.getOneBook = (req, res, next) => {
     .catch(error => res.status(404).json({ error }));
 };
 
+exports.getBestRating = (req, res, next) => {
+  Books.find()
+    .then((books) => {
+      books.sort((book1, book2) => book2.averageRating - book1.averageRating); //trie le tableau
+      const bestBooks = [];
+      for(let index = 0; index < 3 || index < books.length ; index++){
+        bestBooks.push(books[index]);
+      }
+      res.status(200).json(bestBooks);
+    })
+    .catch(error => res.status(404).json({ error }));
+};
+
+
 //POST
 exports.createBooks = (req, res, next) => {
   const booksObject = JSON.parse(req.body.book);
@@ -38,12 +52,17 @@ exports.ratingBooks = (req, res, next) => {
           grade: req.body.rating
         };
         const newBook = books;
+
+        // Rajout de la nouvelle note
         const newTab = books.ratings;
         newTab.push(newElement);
         newBook.ratings = newTab;
+
+        //Calcul de la note moyenne d'un livre
         let sum = 0;
-        newTab.forEach((element) => sum += element.grade);
+        newTab.forEach((element) => sum += element.grade); // sum devient la somme de toutes les notes attribuées
         newBook.averageRating = sum/newTab.length;
+
         Books.updateOne({ _id: req.params.id}, {ratings: newTab, averageRating: newBook.averageRating}) //mise à jour de l'enregistrement
           .then(() => res.status(200).json(newBook))
           .catch(error => res.status(401).json({ error }));
