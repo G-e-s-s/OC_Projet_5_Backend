@@ -16,6 +16,8 @@ module.exports = async (req, res, next) => {
           console.log('File is deleted.');
         }
       });
-    next();
+      req.file.filename = ref;
+      console.log(req.file.filename);
+      next();
   }
 };

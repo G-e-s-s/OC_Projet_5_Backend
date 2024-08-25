@@ -19,7 +19,7 @@ exports.getBestRating = (req, res, next) => {
     .then((books) => {
       books.sort((book1, book2) => book2.averageRating - book1.averageRating); //trie le tableau
       const bestBooks = [];
-      for(let index = 0; index < 3 || index < books.length ; index++){
+      for(let index = 0; index < 3 && index < books.length ; index++){
         bestBooks.push(books[index]);
       }
       res.status(200).json(bestBooks);
