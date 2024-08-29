@@ -8,7 +8,6 @@ module.exports = async (req, res, next) => {
     await sharp(req.file.path)
       .webp({ quality: 20 })
       .toFile("./images/" + ref);
-    console.log(req.file.filename);
     fs.unlink(`./images/${req.file.filename}`,(err) => { // Supprimer l'image non compressée
         if (err) {
           console.error(err);
@@ -17,7 +16,6 @@ module.exports = async (req, res, next) => {
         }
       });
       req.file.filename = ref;
-      console.log(req.file.filename);
       next();
   }
 };
