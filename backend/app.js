@@ -7,7 +7,7 @@ const booksRoutes = require('../backend/routes/books');
 const userRoutes = require('../backend/routes/user')
 
 // Connection à la base de donnée
-mongoose.connect("mongodb+srv://Gess:1234@cluster0.3a5k9m7.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+mongoose.connect(process.env.CNX_DB,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
