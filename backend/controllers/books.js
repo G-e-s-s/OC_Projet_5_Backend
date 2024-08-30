@@ -20,7 +20,7 @@ exports.getOneBook = (req, res, next) => {
 exports.getBestRating = (req, res, next) => { 
   Books.find()
     .then((books) => {
-      books.sort((book1, book2) => book2.averageRating - book1.averageRating); //trie le tableau
+      books.sort((book1, book2) => book2.averageRating - book1.averageRating); //trie le tableau par rapport a la note moyenne
       const bestBooks = [];
       for(let index = 0; index < 3 && index < books.length ; index++){
         bestBooks.push(books[index]);
@@ -67,7 +67,7 @@ exports.ratingBooks = (req, res, next) => {
         newTab.forEach((element) => sum += element.grade); // sum devient la somme de toutes les notes attribuées
         newBook.averageRating = sum/newTab.length;
 
-        Books.updateOne({ _id: req.params.id}, {ratings: newTab, averageRating: newBook.averageRating}) //mise à jour de l'enregistrement
+        Books.updateOne({ _id: req.params.id}, {ratings: newTab, averageRating: newBook.averageRating}) //mise à jour de la note moyenne et du tableau de note
           .then(() => res.status(200).json(newBook))
           .catch(error => res.status(401).json({ error }));
       } else {
@@ -82,8 +82,8 @@ exports.ratingBooks = (req, res, next) => {
 //PUT//
 //Modifier un livre
 exports.modifyBooks = (req, res, next) => { 
-  const booksObject = req.file ? { //savoir si requete avec un fichier
-    ...JSON.parse(req.body.book), //si fichier, recreer une image
+  const booksObject = req.file ? { //savoir si requete avec un fichier existe
+    ...JSON.parse(req.body.book), //si fichier existe, recreer une image
     imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
   } : { ...req.body }; //si pas de fichier : objet transmit dans le corps de la requete
 
