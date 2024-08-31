@@ -7,14 +7,20 @@ require('dotenv').config();
 exports.signup = (req, res, next) => {
     bcrypt.hash(req.body.password, 10) //crypte le mdp; salt = algorithme de hashage
     .then(hash => {
-      const user = new User({  //création du nouvel utilisateur avec mdp crypté
-        email: req.body.email,
-        password: hash
-      });
-    user.save() 
-        .then(() => res.status(201).json({ message: 'Utilisateur créé !' })) //création de ressources
-        .catch(error => res.status(400).json({ error }));
-    })//enregistre l'utilisateur dans la base de données
+        var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if(regex.test(req.body.email)){
+            const user = new User({  //création du nouvel utilisateur avec mdp crypté
+                email: req.body.email,
+                password: hash
+              });
+            user.save() 
+                .then(() => res.status(201).json({ message: 'Utilisateur créé !' })) //création de ressources
+                .catch(error => res.status(400).json({ error }));
+        }//enregistre l'utilisateur dans la base de données
+        else{
+            res.status(401).json({message: 'Adresse mail non valide'});
+        }
+    })
     .catch(error => res.status(500).json({ error }));
 };
 
